@@ -33,3 +33,21 @@ MeshColor::MeshColor(const Mesh& m) : Mesh(m)
 MeshColor::~MeshColor()
 {
 }
+
+void MeshColor::DebugVertices() {
+    MeshColor Origin = *this;
+    Mesh OCopy = Origin;
+    Mesh view(Sphere(Vector::Null,0.2),3);
+    for (const auto & vert: Origin.vertices) {
+        Mesh copy = view;
+        copy.Translate(vert);
+        OCopy.Merge(copy);
+    }
+
+    std::vector<Color> cols;
+    cols.resize(OCopy.Vertexes());
+    for (auto &col: cols) {
+        col = Color(0.8, 0.8, 0.8);
+    }
+    *this = MeshColor(OCopy,cols,OCopy.VertexIndexes());
+}

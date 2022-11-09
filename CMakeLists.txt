@@ -53,6 +53,11 @@ add_executable(${APP} WIN32
     ${INC_DIR}/ray.h
     ${INC_DIR}/realtime.h
     ${INC_DIR}/shader-api.h
+    ${INC_DIR}/primitive.h
+    ${INC_DIR}/timer.h
+    ${INC_DIR}/cylinder.h
+    ${INC_DIR}/capsule.h
+    ${INC_DIR}/torus.h
 )
 set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR})
 

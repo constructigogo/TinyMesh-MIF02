@@ -3,147 +3,180 @@
 #include "box.h"
 #include "ray.h"
 #include "mathematics.h"
+#include "sphere.h"
+#include "cylinder.h"
+#include "capsule.h"
+#include "torus.h"
 
 // Triangle
-class Triangle
-{
+class Triangle {
 protected:
-  Vector p[3] = {Vector(0.0,0.0,0.0),Vector(1.0,0.0,0.0), Vector(0.0,1.0,0.0), }; //!< Array of vertices.
+    std::array<Vector, 3> p = {Vector(0.0, 0.0, 0.0), Vector(1.0, 0.0, 0.0),
+                               Vector(0.0, 1.0, 0.0),}; //!< Array of vertices.
 public:
-  //! Empty.
-  Triangle() {}
-  explicit Triangle(const Vector&, const Vector&, const Vector&);
+    //! Empty.
+    Triangle() {}
 
-  //! Empty.
-  ~Triangle() {}
+    explicit Triangle(const Vector &, const Vector &, const Vector &);
 
-  Vector operator[] (int) const;
+    //! Empty.
+    ~Triangle() {}
 
-  // Point in triangle
-  Vector Vertex(double, double) const;
+    Vector operator[](int) const;
 
-  // Intersection
-  bool Intersect(const Ray&, double&, double&, double&) const;
+    // Point in triangle
+    Vector Vertex(double, double) const;
 
-  void Translate(const Vector&);
+    // Intersection
+    bool Intersect(const Ray &, double &, double &, double &) const;
 
-  // Geometry
-  Vector Normal() const;
-  Vector AreaNormal() const;
-  Vector Center() const;
+    void Translate(const Vector &);
 
-  double Area() const;
-  double Aspect() const;
-  Box GetBox() const;
+    // Geometry
+    Vector Normal() const;
 
-  // Stream
-  friend std::ostream& operator<<(std::ostream&, const Triangle&);
+    Vector AreaNormal() const;
 
-  double InscribedRadius() const;
-  double CircumscribedRadius() const;
+    Vector Center() const;
+
+    double Area() const;
+
+    double Aspect() const;
+
+    Box GetBox() const;
+
+    // Stream
+    friend std::ostream &operator<<(std::ostream &, const Triangle &);
+
+    double InscribedRadius() const;
+
+    double CircumscribedRadius() const;
+
 protected:
-  static double epsilon; //!< Internal epsilon constant.
+    static double epsilon; //!< Internal epsilon constant.
 };
 
 /*!
 \brief Return the i-th vertex.
 \param i Index.
 */
-inline Vector Triangle::operator[] (int i) const
-{
-  return p[i];
+inline Vector Triangle::operator[](int i) const {
+    return p[i];
 }
 
 //! Compute the barycenter of the triangle.
-inline Vector Triangle::Center() const
-{
-  return (p[0] + p[1] + p[2]) / 3.0;
+inline Vector Triangle::Center() const {
+    return (p[0] + p[1] + p[2]) / 3.0;
 }
 
 //! Compute the area of the triangle.
-inline double Triangle::Area() const
-{
-  return 0.5 * Norm((p[0] - p[1]) / (p[2] - p[0]));
+inline double Triangle::Area() const {
+    return 0.5 * Norm((p[0] - p[1]) / (p[2] - p[0]));
 }
 
 /*!
 \brief Create a triangle.
 \param a,b,c Vertices of the triangle.
 */
-inline Triangle::Triangle(const Vector& a, const Vector& b, const Vector& c)
-{
-  p[0] = a;
-  p[1] = b;
-  p[2] = c;
-}
+inline Triangle::Triangle(const Vector &a, const Vector &b, const Vector &c) : p({a, b, c}) {}
 
 
 class QString;
 
-class Mesh
-{
+class Mesh {
 protected:
-  std::vector<Vector> vertices; //!< Vertices.
-  std::vector<Vector> normals;  //!< Normals.
-  std::vector<int> varray;     //!< Vertex indexes.
-  std::vector<int> narray;     //!< Normal indexes.
+    std::vector<Vector> vertices; //!< Vertices.
+    std::vector<Vector> normals;  //!< Normals.
+    std::vector<int> varray;     //!< Vertex indexes.
+    std::vector<int> narray;     //!< Normal indexes.
 public:
-  explicit Mesh();
-  explicit Mesh(const std::vector<Vector>&, const std::vector<int>&);
-  explicit Mesh(const std::vector<Vector>&, const std::vector<Vector>&, const std::vector<int>&, const std::vector<int>&);
-  ~Mesh();
+    explicit Mesh();
 
-  void Reserve(int, int, int, int);
+    explicit Mesh(std::vector<Vector>, std::vector<int>);
 
-  Triangle GetTriangle(int) const;
-  Vector Vertex(int) const;
-  Vector Vertex(int, int) const;
+    explicit Mesh(std::vector<Vector>, std::vector<Vector>, std::vector<int>,
+                  std::vector<int>);
 
-  Vector Normal(int) const;
+    ~Mesh();
 
-  int Triangles() const;
-  int Vertexes() const;
+    void Reserve(int, int, int, int);
 
-  std::vector<int> VertexIndexes() const;
-  std::vector<int> NormalIndexes() const;
+    Triangle GetTriangle(int) const;
 
-  int VertexIndex(int, int) const;
-  int NormalIndex(int, int) const;
+    Vector Vertex(int) const;
 
-  Vector operator[](int) const;
+    Vector Vertex(int, int) const;
 
-  Box GetBox() const;
+    Vector Normal(int) const;
 
-  void Scale(double);
+    int Triangles() const;
 
-  void SmoothNormals();
+    int Vertexes() const;
 
-  // Constructors from core classes
-  explicit Mesh(const Box&);
+    std::vector<int> VertexIndexes() const;
 
-  void Load(const QString&);
-  void SaveObj(const QString&, const QString&) const;
+    std::vector<int> NormalIndexes() const;
+
+    int VertexIndex(int, int) const;
+
+    int NormalIndex(int, int) const;
+
+    Vector operator[](int) const;
+
+    Box GetBox() const;
+
+    void ScaleUniform(double);
+
+    void Scale(double, double, double);
+
+    void Translate(const Vector &);
+
+    std::vector<double> SphereWarp(const Sphere &s, const Vector &dir);
+
+    void Rotate(double Angle, const Vector &Up);
+
+    void SmoothNormals();
+
+    // Constructors from core classes
+    explicit Mesh(const Box &box);
+
+    explicit Mesh(const Sphere &sphere, int accuracy);
+
+    explicit Mesh(const Cylinder &cylinder, int accuracy, unsigned int iFloors=2);
+    explicit Mesh(const Capsule &capsule, int accuracy, unsigned int iFloors=3);
+    explicit Mesh(const Torus &torus, int accuracy);
+
+
+    void Merge(const Mesh &m);
+
+    void Load(const QString &);
+
+    void SaveObj(const QString &, const QString &) const;
+
+    virtual void DebugVertices();
+
 protected:
-  void AddTriangle(int, int, int, int);
-  void AddSmoothTriangle(int, int, int, int, int, int);
-  void AddSmoothQuadrangle(int, int, int, int, int, int, int, int);
-  void AddQuadrangle(int, int, int, int);
+    void AddTriangle(int, int, int, int);
+
+    void AddSmoothTriangle(int, int, int, int, int, int);
+
+    void AddSmoothQuadrangle(int, int, int, int, int, int, int, int);
+
+    void AddQuadrangle(int, int, int, int);
 };
 
 /*!
 \brief Return the set of vertex indexes.
 */
-inline std::vector<int> Mesh::VertexIndexes() const
-{
-  return varray;
+inline std::vector<int> Mesh::VertexIndexes() const {
+    return varray;
 }
 
 /*!
 \brief Return the set of normal indexes.
 */
-inline std::vector<int> Mesh::NormalIndexes() const
-{
-  return narray;
+inline std::vector<int> Mesh::NormalIndexes() const {
+    return narray;
 }
 
 /*!
@@ -151,9 +184,8 @@ inline std::vector<int> Mesh::NormalIndexes() const
 \param t Triangle index.
 \param i Vertex index.
 */
-inline int Mesh::VertexIndex(int t, int i) const
-{
-  return varray.at(t * 3 + i);
+inline int Mesh::VertexIndex(int t, int i) const {
+    return varray.at(t * 3 + i);
 }
 
 /*!
@@ -161,9 +193,8 @@ inline int Mesh::VertexIndex(int t, int i) const
 \param t Triangle index.
 \param i Normal index.
 */
-inline int Mesh::NormalIndex(int t, int i) const
-{
-  return narray.at(t * 3 + i);
+inline int Mesh::NormalIndex(int t, int i) const {
+    return narray.at(t * 3 + i);
 }
 
 /*!
@@ -171,9 +202,9 @@ inline int Mesh::NormalIndex(int t, int i) const
 \param i Index.
 \return The triangle.
 */
-inline Triangle Mesh::GetTriangle(int i) const
-{
-  return Triangle(vertices.at(varray.at(i * 3 + 0)), vertices.at(varray.at(i * 3 + 1)), vertices.at(varray.at(i * 3 + 2)));
+inline Triangle Mesh::GetTriangle(int i) const {
+    return Triangle(vertices.at(varray.at(i * 3 + 0)), vertices.at(varray.at(i * 3 + 1)),
+                    vertices.at(varray.at(i * 3 + 2)));
 }
 
 /*!
@@ -181,9 +212,8 @@ inline Triangle Mesh::GetTriangle(int i) const
 \param i The index of the wanted vertex.
 \return The wanted vertex (as a 3D Vector).
 */
-inline Vector Mesh::Vertex(int i) const
-{
-  return vertices[i];
+inline Vector Mesh::Vertex(int i) const {
+    return vertices[i];
 }
 
 /*!
@@ -192,18 +222,16 @@ inline Vector Mesh::Vertex(int i) const
 \param v The triangle vertex: 0, 1, or 2.
 \return The wanted vertex (as a 3D Vector).
 */
-inline Vector Mesh::Vertex(int t, int v) const
-{
-  return vertices[varray[t * 3 + v]];
+inline Vector Mesh::Vertex(int t, int v) const {
+    return vertices[varray[t * 3 + v]];
 }
 
 /*!
 \brief Get the number of vertices in the geometry.
 \return The number of vertices in the geometry, in other words the size of vertices.
 */
-inline int Mesh::Vertexes() const
-{
-  return int(vertices.size());
+inline int Mesh::Vertexes() const {
+    return int(vertices.size());
 }
 
 /*!
@@ -211,17 +239,15 @@ inline int Mesh::Vertexes() const
 \param i Index of the wanted normal.
 \return The normal.
 */
-inline Vector Mesh::Normal(int i) const
-{
-  return normals[i];
+inline Vector Mesh::Normal(int i) const {
+    return normals[i];
 }
 
 /*!
 \brief Get the number of triangles.
 */
-inline int Mesh::Triangles() const
-{
-  return int(varray.size()) / 3;
+inline int Mesh::Triangles() const {
+    return int(varray.size()) / 3;
 }
 
 /*!
@@ -230,8 +256,7 @@ inline int Mesh::Triangles() const
 \return The wanted vertex (as a 3D Vector).
 \see vertex(int i) const
 */
-inline Vector Mesh::operator[](int i) const
-{
-  return vertices[i];
+inline Vector Mesh::operator[](int i) const {
+    return vertices[i];
 }
 

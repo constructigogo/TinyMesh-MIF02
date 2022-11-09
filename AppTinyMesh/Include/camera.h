@@ -7,82 +7,92 @@
 #include "ray.h"
 
 // Implements a non-standard camera class
-class Camera
-{
+class Camera {
 protected:
-  Vector eye;       //!< Eye.
-  Vector at;        //!< Look at point.
-  Vector up;        //!< Up vector.
+    Vector eye;       //!< Eye.
+    Vector at;        //!< Look at point.
+    Vector up;        //!< Up vector.
 
-  double width;     //!< Screen width.
-  double height;    //!< Screen height.
+    double width;     //!< Screen width.
+    double height;    //!< Screen height.
 
-  double cah;       //!< Camera aperture horizontal. 
-  double cav;       //!< Camera aperture vertical.
-  double fl;        //!< Focal length.
+    double cah;       //!< Camera aperture horizontal.
+    double cav;       //!< Camera aperture vertical.
+    double fl;        //!< Focal length.
 
-  double nearplane; //!< Near plane.
-  double farplane;  //!< Far plane.
+    double nearplane; //!< Near plane.
+    double farplane;  //!< Far plane.
 public:
-  Camera();
-  explicit Camera(const Vector&, const Vector&, const Vector & = Vector::Z, double = 1.0, double = 1.0, double = 1.0, double = 100000.0);
-  explicit Camera(const Vector&, const Vector&, const Vector&, double, double = 1.0, double = 100000.0);
+    Camera();
 
-  Vector At() const;
-  Vector Eye() const;
-  Vector Up() const;
-  Vector View() const;
+    explicit Camera(const Vector &, const Vector &, const Vector & = Vector::Z, double = 1.0, double = 1.0,
+                    double = 1.0, double = 100000.0);
 
-  double GetNear() const;
-  double GetFar() const;
-  double GetAngleOfViewH() const;
-  double GetAngleOfViewV(double, double) const;
+    explicit Camera(const Vector &, const Vector &, const Vector &, double, double = 1.0, double = 100000.0);
 
-  void Vertical();
+    Vector At() const;
 
-  void BackForth(double, bool = false);
-  void LeftRightRound(double);
-  void UpDownRound(double);
+    Vector Eye() const;
 
-  void SetAt(const Vector&);
-  void SetEye(const Vector&);
-  void SetPlanes(double, double);
+    Vector Up() const;
 
-  // Move camera in a plane
-  void UpDownVertical(double);
-  void LeftRightHorizontal(double);
+    Vector View() const;
 
-  friend std::ostream& operator<<(std::ostream&, const Camera&);
+    double GetNear() const;
 
-  // Pixel and sub-pixel sampling
-  Ray PixelToRay(int, int, int, int) const;
-  bool VectorToPixel(const Vector&, double&, double&, int, int) const;
+    double GetFar() const;
+
+    double GetAngleOfViewH() const;
+
+    double GetAngleOfViewV(double, double) const;
+
+    void Vertical();
+
+    void BackForth(double, bool = false);
+
+    void LeftRightRound(double);
+
+    void UpDownRound(double);
+
+    void SetAt(const Vector &);
+
+    void SetEye(const Vector &);
+
+    void SetPlanes(double, double);
+
+    // Move camera in a plane
+    void UpDownVertical(double);
+
+    void LeftRightHorizontal(double);
+
+    friend std::ostream &operator<<(std::ostream &, const Camera &);
+
+    // Pixel and sub-pixel sampling
+    Ray PixelToRay(int, int, int, int) const;
+
+    bool VectorToPixel(const Vector &, double &, double &, int, int) const;
 };
 
 //! Returns the look-at point.
-inline Vector Camera::At() const
-{
-  return at;
+inline Vector Camera::At() const {
+    return at;
 }
 
 //! Returns the eye point.
-inline Vector Camera::Eye() const
-{
-  return eye;
+inline Vector Camera::Eye() const {
+    return eye;
 }
 
 //! Returns the up point.
-inline Vector Camera::Up() const
-{
-  return up;
+inline Vector Camera::Up() const {
+    return up;
 }
 
 /*!
 \brief Returns the view direction.
 */
-inline Vector Camera::View() const
-{
-  return at - eye;
+inline Vector Camera::View() const {
+    return at - eye;
 }
 
 #endif
