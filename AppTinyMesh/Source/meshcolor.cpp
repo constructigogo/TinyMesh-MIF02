@@ -15,6 +15,7 @@ MeshColor::MeshColor()
 */
 MeshColor::MeshColor(const Mesh& m, const std::vector<Color>& cols, const std::vector<int>& carr) : Mesh(m), colors(cols), carray(carr)
 {
+    Accecibility();
 }
 
 /*!

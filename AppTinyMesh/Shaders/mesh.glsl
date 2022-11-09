@@ -4,6 +4,7 @@
 in vec3 vertex;
 in vec3 normal;
 in vec3 color;
+in vec3 AO;
 
 uniform mat4 ModelViewMatrix;
 uniform mat4 ProjectionMatrix;
@@ -12,6 +13,7 @@ uniform mat4 TRSMatrix;
 out vec3 geomNormal;
 out vec3 geomVertex;
 out vec3 geomColor;
+out vec3 geomAO;
 
 void main(void)
 {
@@ -20,6 +22,7 @@ void main(void)
 	geomNormal	  = (TRSMatrix * vec4(normalize(normal), 0.0f)).xyz;
 	geomVertex 	  = vertex;
 	geomColor	  = color;
+	geomAO 		  = AO;
 } 
 #endif
 
@@ -32,10 +35,13 @@ uniform vec2 WIN_SCALE;
 in vec3 geomVertex[];
 in vec3 geomNormal[];
 in vec3 geomColor[];
+in vec3 geomAO[];
+
 
 out vec3 fragVertex;
 out vec3 fragNormal;
 out vec3 fragColor;
+out vec3 fragAO;
 out vec3 dist;
 out float ratio;
 
@@ -61,17 +67,17 @@ void main()
 
 	dist = vec3(area / length(v0), 0, 0);
 	gl_Position = gl_in[0].gl_Position;
-	fragVertex = geomVertex[0]; fragNormal = geomNormal[0]; fragColor = geomColor[0];
+	fragVertex = geomVertex[0]; fragNormal = geomNormal[0]; fragColor = geomColor[0]; fragAO = geomAO[0];
 	EmitVertex();
 
 	dist = vec3(0, area / length(v1), 0);
 	gl_Position = gl_in[1].gl_Position;
-	fragVertex = geomVertex[1]; fragNormal = geomNormal[1]; fragColor = geomColor[1];
+	fragVertex = geomVertex[1]; fragNormal = geomNormal[1]; fragColor = geomColor[1]; fragAO = geomAO[1];
 	EmitVertex();
 
 	dist = vec3(0, 0, area / length(v2));
 	gl_Position = gl_in[2].gl_Position;
-	fragVertex = geomVertex[2]; fragNormal = geomNormal[2]; fragColor = geomColor[2];
+	fragVertex = geomVertex[2]; fragNormal = geomNormal[2]; fragColor = geomColor[2];fragAO = geomAO[2];
 	EmitVertex();
 
 	EndPrimitive();
@@ -83,6 +89,7 @@ void main()
 in vec3 fragVertex;
 in vec3 fragNormal;
 in vec3 fragColor;
+in vec3 fragAO;
 in vec3 dist;
 in float ratio;
 
@@ -128,6 +135,11 @@ vec4 GetBaseColor()
 	{
 		// normalize(-vec3(0.2, 0.8, 0.0))
 		return vec4(fragColor.xyz * Diffuse(fragNormal, -viewDir), 1.0);
+	}
+	// AO
+	if (material == 2)
+	{
+		return vec4(fragAO.xyz * Diffuse(fragNormal, -viewDir), 1.0);
 	}
 }
 

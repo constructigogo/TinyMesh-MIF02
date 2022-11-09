@@ -120,6 +120,7 @@ MeshWidget::MeshGL::MeshGL(const MeshColor& mesh, const Vector& fr) : MeshGL()
     std::vector<int> vertexIndexes = mesh.VertexIndexes();
     std::vector<int> normalIndexes = mesh.NormalIndexes();
     std::vector<int> colorIndexes = mesh.ColorIndexes();
+    std::vector<int> AOIndexes = mesh.AOIndexes();
     assert(vertexIndexes.size() == normalIndexes.size());
 
     int nbVertex = int(vertexIndexes.size());
@@ -127,11 +128,13 @@ MeshWidget::MeshGL::MeshGL(const MeshColor& mesh, const Vector& fr) : MeshGL()
     float* vertices = new float[singleBufferSize];
     float* normals = new float[singleBufferSize];
     float* colors = new float[singleBufferSize];
+    float* AOColors = new float[singleBufferSize];
     for (int i = 0; i < nbVertex; i++)
     {
         int indexVertex = vertexIndexes[i];
         int indexNormal = normalIndexes[i];
         int indexColor = colorIndexes[i];
+        int indexAOColor = AOIndexes[i];
 
         Vector vertex = mesh.Vertex(indexVertex);
         vertices[i * 3 + 0] = float(vertex[0]);
@@ -147,6 +150,11 @@ MeshWidget::MeshGL::MeshGL(const MeshColor& mesh, const Vector& fr) : MeshGL()
         colors[i * 3 + 0] = float(color[0]);
         colors[i * 3 + 1] = float(color[1]);
         colors[i * 3 + 2] = float(color[2]);
+
+        Color AO = mesh.GetAO(indexAOColor);
+        AOColors[i * 3 + 0] = float(AO[0]);
+        AOColors[i * 3 + 1] = float(AO[1]);
+        AOColors[i * 3 + 2] = float(AO[2]);
     }
     // Indices are now sorted
     int* indices = new int[nbVertex];
@@ -166,7 +174,8 @@ MeshWidget::MeshGL::MeshGL(const MeshColor& mesh, const Vector& fr) : MeshGL()
     size_t fullSize =
             sizeof(float) * singleBufferSize	// Vertices
             + sizeof(float) * singleBufferSize	// Normals
-            + sizeof(float) * singleBufferSize;	// Colors
+            + sizeof(float) * singleBufferSize 	// Colors
+            + sizeof(float) * singleBufferSize;	// AO
     glBindBuffer(GL_ARRAY_BUFFER, fullBuffer);
     glBufferData(GL_ARRAY_BUFFER, fullSize, nullptr, GL_STATIC_DRAW);
 
@@ -192,6 +201,13 @@ MeshWidget::MeshGL::MeshGL(const MeshColor& mesh, const Vector& fr) : MeshGL()
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
     glEnableVertexAttribArray(2);
 
+    // AO(3)
+    offset = offset + size;
+    size = sizeof(float) * singleBufferSize;
+    glBufferSubData(GL_ARRAY_BUFFER, offset, size, AOColors);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
+    glEnableVertexAttribArray(3);
+
     // Triangles
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -202,6 +218,7 @@ MeshWidget::MeshGL::MeshGL(const MeshColor& mesh, const Vector& fr) : MeshGL()
     delete[] normals;
     delete[] colors;
     delete[] indices;
+    delete[] AOColors;
 }
 
 /*!

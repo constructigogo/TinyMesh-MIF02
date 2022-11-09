@@ -117,7 +117,7 @@ void MainWindow::UpdateMaterial() {
     if (uiw->radioShadingButton_1->isChecked())
         meshWidget->SetMaterialGlobal(MeshMaterial::Normal);
     else
-        meshWidget->SetMaterialGlobal(MeshMaterial::Color);
+        meshWidget->SetMaterialGlobal(MeshMaterial::AO);
 }
 
 void MainWindow::ResetCamera() {
