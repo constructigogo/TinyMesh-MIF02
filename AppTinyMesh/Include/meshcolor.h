@@ -60,12 +60,18 @@ inline std::vector<int> MeshColor::ColorIndexes() const {
     return carray;
 }
 
-
+/**
+ *
+ * @param i index
+ * @return The AO color at index
+ */
 inline Color MeshColor::GetAO(int i) const {
     return aocolors[i];
 }
 
-
+/**
+ * @return The set of AO color indices
+ */
 inline std::vector<int> MeshColor::AOIndexes() const {
     return aoarray;
 }

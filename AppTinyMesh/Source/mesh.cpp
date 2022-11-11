@@ -195,6 +195,11 @@ Mesh::Mesh(const Box &box) {
     AddTriangle(6, 7, 2, 3);
 }
 
+/**
+ * Generate a mesh from a Sphere
+ * @param sphere to generate
+ * @param accuracy mesh accuracy
+ */
 Mesh::Mesh(const Sphere &sphere, int accuracy) {
     vertices.emplace_back(sphere.getC() + Vector(0, 0, sphere.getR())); // Top vertice
     normals.emplace_back(Normalized((Vector(0, 0, sphere.getR()))));
@@ -347,7 +352,11 @@ void Mesh::SaveObj(const QString &url, const QString &meshName) const {
     data.close();
 }
 
-
+/**
+ * Rotate around axis
+ * @param Angle radian
+ * @param Up rotate around
+ */
 void Mesh::Rotate(double Angle, const Vector &Up) {
     Matrix rot = Matrix::rotate(Angle, Up);
     // Vertexes
@@ -363,6 +372,12 @@ void Mesh::Rotate(double Angle, const Vector &Up) {
 
 }
 
+/**
+ * Scale the mesh along axis
+ * @param x
+ * @param y
+ * @param z
+ */
 void Mesh::Scale(double x, double y, double z) {
     Matrix rot = Matrix::scale(x, y, z);
     // Vertexes
@@ -390,6 +405,10 @@ void Mesh::Scale(double x, double y, double z) {
     }
 }
 
+/**
+ * Translate the mesh
+ * @param t translation value
+ */
 void Mesh::Translate(const Vector &t) {
     // Vertexes
     for (auto &vertice: vertices) {
@@ -397,6 +416,10 @@ void Mesh::Translate(const Vector &t) {
     }
 }
 
+/**
+ * Merge two mesh together
+ * @param m to merge
+ */
 void Mesh::Merge(const Mesh &m) {
     int preMergeCountVertex = Mesh::vertices.size();
     int preMergeCountNormal = Mesh::normals.size();
@@ -417,6 +440,12 @@ void Mesh::Merge(const Mesh &m) {
     }
 }
 
+/**
+ * Warp vertices of a mesh inside a given Sphere, the closer to the center the higher the warp
+ * @param s
+ * @param dir
+ * @return 0 to 1 value of the warp at each vertice
+ */
 std::vector<double> Mesh::SphereWarp(const Sphere &s, const Vector &dir) {
     std::vector<double> buff;
     for (auto &vert: Mesh::vertices) {
@@ -427,7 +456,12 @@ std::vector<double> Mesh::SphereWarp(const Sphere &s, const Vector &dir) {
     return buff;
 }
 
-
+/**
+ * Generate a cylinder mesh given a Cylinder
+ * @param cylinder
+ * @param accuracy Mesh accuracy
+ * @param iFloors number of intermediate floors counting the top and bottom one
+ */
 Mesh::Mesh(const Cylinder &cylinder, int accuracy, unsigned int iFloors) {
     vertices.emplace_back(cylinder.getC() + Vector(0, 0, cylinder.getH())); // Top vertice
     normals.emplace_back(Normalized((cylinder.getC() + Vector(0, 0, cylinder.getH()))));
@@ -479,6 +513,12 @@ Mesh::Mesh(const Cylinder &cylinder, int accuracy, unsigned int iFloors) {
     }
 }
 
+/**
+ * Generate a capsule mesh given a Capsule
+ * @param capsule
+ * @param accuracy Mesh accuracy
+ * @param iFloors number of intermediate floors
+ */
 Mesh::Mesh(const Capsule &capsule, int accuracy, unsigned int iFloors) {
     vertices.emplace_back(capsule.getC() + Vector(0, 0, capsule.getH() + capsule.getR())); // Top vertice
     normals.emplace_back(Normalized((capsule.getC() + Vector(0, 0, capsule.getH()))));
@@ -543,6 +583,9 @@ Mesh::Mesh(const Capsule &capsule, int accuracy, unsigned int iFloors) {
     }
 }
 
+/**
+ * Create a small sphere at each vertices
+ */
 void Mesh::DebugVertices() {
     Mesh self = *this;
     Mesh view(Sphere(Vector::Null, 0.2), 3);
@@ -553,6 +596,11 @@ void Mesh::DebugVertices() {
     }
 }
 
+/**
+ * Create a Torus Mesh given a Torus
+ * @param torus
+ * @param accuracy Mesh accuracy
+ */
 Mesh::Mesh(const Torus &torus, int accuracy) {
 
     double theta = 0;

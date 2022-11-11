@@ -7,6 +7,9 @@
 #include "mathematics.h"
 #include "intersectable.h"
 
+/**
+ * Virtual class for primitive shapes
+ */
 class Primitive : public Intersectable {
 public:
 

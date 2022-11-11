@@ -32,6 +32,10 @@ MeshColor::MeshColor(const Mesh &m) : Mesh(m) {
 MeshColor::~MeshColor() {
 }
 
+
+/**
+ * Same as parent Debug Vertices
+ */
 void MeshColor::DebugVertices() {
     MeshColor Origin = *this;
     Mesh OCopy = Origin;
@@ -51,7 +55,11 @@ void MeshColor::DebugVertices() {
     *this = MeshColor(OCopy, cols, OCopy.VertexIndexes(), 3, 4);
 }
 
-
+/**
+ * Compute the AO of the mesh
+ * @param accuracy Number of ray used, if > 1 then the number of ray is : ((accuracy*4)(accuracy^2))
+ * @param range
+ */
 void MeshColor::Accessibility(int accuracy, double range) {
     aocolors.reserve(carray.size());
     double deltaTheta = (0.5 * Math::PI()) / ((double) (accuracy * 4));

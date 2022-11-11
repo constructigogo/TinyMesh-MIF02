@@ -524,6 +524,7 @@ private:
 
 };
 
+//! Non const version of the operator[]
 inline double &Matrix::operator[](int i) {
     return c[i];
 }
@@ -533,12 +534,23 @@ inline double Matrix::operator[](int i) const {
     return c[i];
 }
 
+/**
+ * Compute m * v
+ * @param v
+ * @return modified vector
+ */
 inline Vector Matrix::operator*(const Vector &v) {
     return Vector(c[0] * v[0] + c[1] * v[1] + c[2] * v[2],
                   c[3] * v[0] + c[4] * v[1] + c[5] * v[2],
                   c[6] * v[0] + c[7] * v[1] + c[8] * v[2]);
 }
 
+/**
+ * Multiply all component by a given number
+ * @param v
+ * @param m
+ * @return
+ */
 inline Matrix operator*(double v, const Matrix &m) {
     return {m[0] * v, m[1] * v, m[2] * v,
             m[3] * v, m[4] * v, m[5] * v,

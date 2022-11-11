@@ -140,9 +140,7 @@ public:
 
     // Constructors from core classes
     explicit Mesh(const Box &box);
-
     explicit Mesh(const Sphere &sphere, int accuracy);
-
     explicit Mesh(const Cylinder &cylinder, int accuracy, unsigned int iFloors=2);
     explicit Mesh(const Capsule &capsule, int accuracy, unsigned int iFloors=3);
     explicit Mesh(const Torus &torus, int accuracy);

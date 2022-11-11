@@ -5,6 +5,9 @@
 #pragma once
 #include "ray.h"
 
+/**
+ * Interface for Ray intersection
+ */
 class Intersectable {
 public:
     virtual ~Intersectable()=default;
