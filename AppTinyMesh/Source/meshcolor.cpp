@@ -39,7 +39,7 @@ void MeshColor::DebugVertices() {
 
     for (int i = 0; i < Origin.Vertexes(); ++i) {
         Mesh copy = view;
-        copy.Rotate(-std::acos(Origin.Normal(i)* Vector::Z),Origin.Normal(i)/Vector::Z);
+        copy.Rotate(-std::acos(Origin.Normal(i) * Vector::Z), Origin.Normal(i) / Vector::Z);
         copy.Translate(Origin.Vertex(i));
         OCopy.Merge(copy);
     }
@@ -54,7 +54,7 @@ void MeshColor::DebugVertices() {
 
 void MeshColor::Accessibility(int accuracy, double range) {
     aocolors.reserve(carray.size());
-    double deltaTheta = (0.5 * Math::PI()) / ((double) (accuracy*4));
+    double deltaTheta = (0.5 * Math::PI()) / ((double) (accuracy * 4));
     double deltaPhi = (2.0 * Math::PI()) / ((double) accuracy * accuracy);
     static double bias = 1.0e-1;
 
@@ -69,25 +69,10 @@ void MeshColor::Accessibility(int accuracy, double range) {
         double rotateY = std::acos(Normal(vertIndex) * Vector::Y);
         Matrix rot = Matrix::rotate(-rotateZ, Normal(vertIndex) / Vector::Z);
         Matrix rotZ = (rotateY < Math::DegreeToRadian(90)) ?
-                Matrix::rotate(rotateX, Vector::Z):
-                Matrix::rotate(-rotateX, Vector::Z);
+                      Matrix::rotate(rotateX, Vector::Z) :
+                      Matrix::rotate(-rotateX, Vector::Z);
 
-        /*
-        Vector dir = Normal(vertIndex);
-        Ray ray(Vertex(vertIndex) + (dir * bias), dir);
-        count++;
-        for (int i = 0; i < Triangles(); ++i) {
-            Ray::RayHitTriangle hit;
-            if (GetTriangle(i).Intersect(ray, hit.depth, hit.u, hit.v)) {
-                if (hit.depth > 0 && hit.depth <= range) {
-                    buffer += 1;
-                    break;
-                }
-            }
-        }
-         */
-
-        for (int row = 0; row < (accuracy==1?1:accuracy*4); ++row) {
+        for (int row = 0; row < (accuracy == 1 ? 1 : accuracy * 4); ++row) {
             phi = 0;
             for (int point = 0; point < (row == 0 ? 1 : accuracy * accuracy); ++point) {
                 double x = std::sin(theta) * std::cos(phi);
@@ -117,11 +102,8 @@ void MeshColor::Accessibility(int accuracy, double range) {
     }
 
 
-    for (
-        auto elem
-            : carray) {
-        aoarray.
-                push_back(elem);
+    for (auto elem: carray) {
+        aoarray.push_back(elem);
     }
 }
 
