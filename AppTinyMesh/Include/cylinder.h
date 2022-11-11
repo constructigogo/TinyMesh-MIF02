@@ -6,7 +6,7 @@
 #include "primitive.h"
 
 class Cylinder : public Primitive{
-private:
+protected:
     Vector c;
     double h;
     double r;
@@ -14,6 +14,8 @@ public:
     Cylinder(const Vector &c, double h, double r);
 
     virtual ~Cylinder()=default;
+
+    bool Intersect(const Ray &ray, double &d, double &d1, double &d2) const override;
 
     bool IsInside(const Vector &p) const override;
 

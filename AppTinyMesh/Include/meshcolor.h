@@ -1,6 +1,7 @@
 #ifndef __MeshColor__
 #define __MeshColor__
 
+#include <cassert>
 #include "color.h"
 #include "mesh.h"
 
@@ -16,7 +17,8 @@ public:
 
     explicit MeshColor(const Mesh &);
 
-    explicit MeshColor(const Mesh &, const std::vector<Color> &, const std::vector<int> &);
+    explicit MeshColor(const Mesh &m, const std::vector<Color> &cols, const std::vector<int> &carr, int acc,
+                       double range);
 
     ~MeshColor();
 
@@ -32,7 +34,7 @@ public:
 
     std::vector<int> AOIndexes() const;
 
-    void Accecibility();
+    void Accessibility(int accuracy, double range);
 };
 
 /*!
@@ -68,16 +70,5 @@ inline std::vector<int> MeshColor::AOIndexes() const {
     return aoarray;
 }
 
-inline void MeshColor::Accecibility() {
-    aocolors.reserve(carray.size());
-
-    for (int i = 0; i < carray.size(); ++i) {
-        aocolors.emplace_back(0.1, 0.8, 0.1);// l'AO
-    }
-
-    for (auto elem: carray) {
-        aoarray.push_back(elem);
-    }
-}
 
 #endif

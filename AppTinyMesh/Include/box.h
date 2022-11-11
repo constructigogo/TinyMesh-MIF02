@@ -66,6 +66,9 @@ public:
 
     friend std::ostream &operator<<(std::ostream &, const Box &);
 
+    bool Intersect(const Ray &ray, double &d, double &d1, double &d2) const override;
+
+
 public:
     static const double epsilon; //!< Internal \htmlonly\epsilon;\endhtmlonly for ray intersection tests.
     static const Box Null; //!< Empty box.
@@ -168,4 +171,42 @@ inline int operator==(const Box &a, const Box &b) {
 */
 inline int operator!=(const Box &a, const Box &b) {
     return !(a == b);
+}
+
+inline bool Box::Intersect(const Ray &ray, double &d, double &d1, double &d2) const {
+
+    double tmin = (a[0] - ray.Origin()[0]) / ray.Direction()[0];
+    double tmax = (b[0] - ray.Origin()[0]) / ray.Direction()[0];
+
+    if (tmin > tmax) std::swap(tmin, tmax);
+
+    double tymin = (a[1] - ray.Origin()[1]) / ray.Direction()[1];
+    double tymax = (b[1] - ray.Origin()[1]) / ray.Direction()[1];
+
+    if (tymin > tymax) std::swap(tymin, tymax);
+
+    if ((tmin > tymax) || (tymin > tmax))
+        return false;
+
+    if (tymin > tmin)
+        tmin = tymin;
+
+    if (tymax < tmax)
+        tmax = tymax;
+
+    float tzmin = (a[2] - ray.Origin()[2]) / ray.Direction()[2];
+    float tzmax = (b[2] - ray.Origin()[2]) / ray.Direction()[2];
+
+    if (tzmin > tzmax) std::swap(tzmin, tzmax);
+
+    if ((tmin > tzmax) || (tzmin > tmax))
+        return false;
+
+    if (tzmin > tmin)
+        tmin = tzmin;
+
+    if (tzmax < tmax)
+        tmax = tzmax;
+
+    return true;
 }

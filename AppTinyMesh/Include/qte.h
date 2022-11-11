@@ -28,7 +28,7 @@ public slots:
   void editingSceneLeft(const Ray&);
   void editingSceneRight(const Ray&);
   void BoxMeshExample();
-  void SphereImplicitExample();
+  void DemoExample();
   void SphereMeshExample();
   void CylinderMeshExample();
   void CapsuleMeshExample();

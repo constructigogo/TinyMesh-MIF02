@@ -7,9 +7,10 @@
 #include "cylinder.h"
 #include "capsule.h"
 #include "torus.h"
+#include "intersectable.h"
 
 // Triangle
-class Triangle {
+class Triangle : public Intersectable{
 protected:
     std::array<Vector, 3> p = {Vector(0.0, 0.0, 0.0), Vector(1.0, 0.0, 0.0),
                                Vector(0.0, 1.0, 0.0),}; //!< Array of vertices.
@@ -28,7 +29,7 @@ public:
     Vector Vertex(double, double) const;
 
     // Intersection
-    bool Intersect(const Ray &, double &, double &, double &) const;
+    bool Intersect(const Ray &, double &, double &, double &) const override;
 
     void Translate(const Vector &);
 

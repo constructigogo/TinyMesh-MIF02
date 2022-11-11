@@ -97,7 +97,7 @@ constexpr double Math::Cubic(double a, double b, double t) {
 }
 
 constexpr double Math::PI() {
-    return 3.14159265358979323846;
+    return 3.14159265358979311599796346854;
 }
 
 
@@ -107,7 +107,7 @@ protected:
     double c[3]; //!< Components.
 public:
     //! Empty
-    Vector() {}
+    Vector();
 
     explicit Vector(double);
 
@@ -174,6 +174,7 @@ public:
 
     friend Vector Normalized(const Vector &);
 
+
     // Compare functions
     static Vector Min(const Vector &, const Vector &);
 
@@ -204,6 +205,14 @@ public:
     static const Vector Y; //!< Vector(0,1,0).
     static const Vector Z; //!< Vector(0,0,1).
 };
+
+/*!
+\brief Create a null vector
+*/
+inline Vector::Vector() {
+    c[0] = c[1] = c[2] =0;
+}
+
 
 /*!
 \brief Create a vector with the same coordinates.

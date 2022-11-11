@@ -27,7 +27,7 @@ double Sphere::SquaredDistanceToSphere(const Vector &pos) const {
 }
 
 double Sphere::OneMinusPercentToCenter(const Vector &pos) const {
-    return 1 - Math::Min((SquaredDistanceToCenter(pos))/r2,1);
+    return 1 - Math::Min((SquaredDistanceToCenter(pos)) / r2, 1);
 }
 
 const Vector &Sphere::getC() const {
@@ -43,19 +43,41 @@ double Sphere::getR2() const {
 }
 
 double Sphere::Volume() const {
-    return (4.0/3.0)* Math::PI() * Sphere::r2*Sphere::r;
+    return (4.0 / 3.0) * Math::PI() * Sphere::r2 * Sphere::r;
 }
 
 void Sphere::Translate(const Vector &v) {
-    Sphere::c+=v;
+    Sphere::c += v;
 }
 
 void Sphere::Scale(double x) {
-    Sphere::r*=x;
+    Sphere::r *= x;
     Sphere::r2 = Sphere::r * Sphere::r;
 }
 
 Vector Sphere::Center() const {
     return c;
+}
+
+/**
+ *
+ * @param ray ray
+ * @param d signed intersect distance, 0 if ray is inside
+ * @param d1 entry point distance, opposite sign of exit if ray is inside
+ * @param d2 exit point distance
+ * @return
+ */
+bool Sphere::Intersect(const Ray &ray, double &d, double &d1, double &d2) const {
+
+    Vector L = c - ray.Origin();
+    double tca = L * ray.Direction();
+    double ds = (L * L) - (tca * tca);
+    if (ds > r2) return false;
+    double thc = std::sqrt(r2 - ds);
+    d = SquaredNorm(L)>r2 ?tca-thc:0;
+    d1 = tca - thc;
+    d2 = tca + thc;
+    if(tca <0) std::swap(d1,d2);
+    return true;
 }
 

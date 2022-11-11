@@ -20,6 +20,12 @@ Matrix Matrix::scale(double x, double y, double z) {
             0, 0, z};
 }
 
+/**
+ * rotate by angle around UP
+ * @param angle
+ * @param up
+ * @return
+ */
 Matrix Matrix::rotate(double angle, const Vector &up) {
     double s = sin(angle);
     double c = cos(angle);

@@ -14,6 +14,8 @@ private:
 public:
     Torus(const Vector &c, double a, double b);
 
+    bool Intersect(const Ray &ray, double &d, double &d1, double &d2) const override;
+
     const Vector &getC() const;
 
     double getA() const;

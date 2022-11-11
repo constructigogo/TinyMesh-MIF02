@@ -12,6 +12,7 @@ public:
 
     virtual ~Capsule() = default;
 
+    bool Intersect(const Ray &ray, double &d, double &d1, double &d2) const override;
 
     bool IsInside(const Vector &p) const override;
 

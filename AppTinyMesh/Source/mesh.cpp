@@ -197,7 +197,13 @@ Mesh::Mesh(const Box &box) {
 
 Mesh::Mesh(const Sphere &sphere, int accuracy) {
     vertices.emplace_back(sphere.getC() + Vector(0, 0, sphere.getR())); // Top vertice
-    normals.emplace_back(Normalized((sphere.getC() + Vector(0, 0, sphere.getR()))));
+    normals.emplace_back(Normalized((Vector(0, 0, sphere.getR()))));
+
+    Ray::RayHitTriangle hitTriangle;
+    Ray ray(Vector(2,0,0),Vector(1,0,0));
+    Ray ray2(Vector(-2,0,0),Vector(1,0,0));
+    Ray ray3(Vector(-0.5,0,0),Vector(1,0,0));
+    Ray ray4(Vector(0.5,0,0),Vector(1,0,0));
 
     double theta = 0;
     double phi = 0;
@@ -211,14 +217,14 @@ Mesh::Mesh(const Sphere &sphere, int accuracy) {
             double x = std::sin(phi) * std::cos(theta);
             double y = std::sin(phi) * std::sin(theta);
             double z = std::cos(phi);
-            vertices.emplace_back(Vector(x, y, z) * sphere.getR());
+            vertices.emplace_back((Vector(x, y, z) * sphere.getR())+sphere.getC());
             normals.emplace_back(Normalized(Vector(x, y, z)));
         }
     }
 
 
     vertices.emplace_back(sphere.getC() - Vector(0, 0, sphere.getR())); // Bottom vertice
-    normals.emplace_back(Normalized((sphere.getC() - Vector(0, 0, sphere.getR()))));
+    normals.emplace_back(Normalized((-Vector(0, 0, sphere.getR()))));
 
     // add top / bottom triangles
     for (int i = 0; i < accuracy; ++i) {
@@ -352,7 +358,7 @@ void Mesh::Rotate(double Angle, const Vector &Up) {
     Matrix inv = Transpose(Inverse(rot));
     // Normals
     for (auto &normal: normals) {
-        normal = inv * normal;
+        normal = rot * normal;
     }
 
 }
@@ -551,19 +557,20 @@ Mesh::Mesh(const Torus &torus, int accuracy) {
 
     double theta = 0;
     double phi = 0;
-    double deltaTheta = (2.0 * Math::PI()) / (accuracy);
-    double deltaPhi = (2 * Math::PI()) / (accuracy);
+    double deltaTheta = (2.0 * Math::PI()) / (double)(accuracy);
+    double deltaPhi = (2.0 * Math::PI()) / (double)(accuracy);
 
     for (int circle = 0; circle < accuracy; ++circle) {
         theta += deltaTheta;
+        phi = 0;
         double xc = std::cos(theta);
         double yc = std::sin(theta);
         for (int point = 0; point < accuracy; ++point) {
             phi += deltaPhi;
-            double x = std::sin(phi) * std::cos(theta);
-            double y = std::sin(phi) * std::sin(theta);
+            double x = std::sin(phi) * xc;
+            double y = std::sin(phi) * yc;
             double z = std::cos(phi);
-            vertices.emplace_back((Vector(x, y, z) * torus.getA()) + (Vector(xc, yc, 0) * torus.getB()));
+            vertices.emplace_back(((Vector(x, y, z) * torus.getA()) + (Vector(xc, yc, 0) * torus.getB()))+torus.getC());
             normals.emplace_back(Normalized(Vector(x, y, z)));
         }
     }

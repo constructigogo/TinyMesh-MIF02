@@ -10,12 +10,12 @@ protected:
     Vector n; //!< Direction.
 public:
     //! Empty.
-    Ray() {}
+    Ray() = default;
 
     explicit Ray(const Vector &, const Vector &);
 
     //! Empty.
-    ~Ray() {}
+    ~Ray() = default;
 
     Ray Reflect(const Vector &, const Vector &);
 
@@ -27,6 +27,13 @@ public:
     Vector Direction() const;
 
     friend std::ostream &operator<<(std::ostream &, const Ray &);
+
+    struct RayHitTriangle {
+        double depth = -1;
+        double u = -1;
+        double v = -1;
+    };
+
 };
 
 /*!
@@ -39,10 +46,7 @@ Ray ray(Vector(0.0,0.0,0.0),Normalized(Vector(2.0,-1.0,3.0)));
 \param p Origin.
 \param d Direction (should be unit vector).
 */
-inline Ray::Ray(const Vector &p, const Vector &d) {
-    c = p;
-    n = d;
-}
+inline Ray::Ray(const Vector &p, const Vector &d) : c(p), n(d) {}
 
 /*!
 \brief Return the origin of the ray.

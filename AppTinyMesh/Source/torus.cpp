@@ -9,19 +9,20 @@ bool Torus::IsInside(const Vector &p) const {
 }
 
 Vector Torus::Center() const {
-    return Vector();
+    return c;
 }
 
 double Torus::Volume() const {
-    return 0;//TODO
+    return (Math::PI()*a*a)*(2*Math::PI()*b);
 }
 
 void Torus::Translate(const Vector &v) {
-
+    Torus::c+=v;
 }
 
 void Torus::Scale(double x) {
-
+    Torus::a= x*a;
+    Torus::b= x*b;
 }
 
 Torus::Torus(const Vector &c, double a, double b) : c(c), a(a), b(b) {}
@@ -36,4 +37,8 @@ double Torus::getA() const {
 
 double Torus::getB() const {
     return b;
+}
+
+bool Torus::Intersect(const Ray &ray, double &d, double &d1, double &d2) const {
+    return false;
 }

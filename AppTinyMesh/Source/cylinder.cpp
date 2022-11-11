@@ -13,7 +13,7 @@ Vector Cylinder::Center() const {
 }
 
 double Cylinder::Volume() const {
-    return 0;
+    return Math::PI()*r*r*(h*2.0);
 }
 
 void Cylinder::Translate(const Vector &v) {
@@ -37,3 +37,7 @@ double Cylinder::getH() const {
 }
 
 Cylinder::Cylinder(const Vector &c, double h, double r) : c(c), h(h), r(r) {}
+
+bool Cylinder::Intersect(const Ray &ray, double &d, double &d1, double &d2) const {
+    return false;
+}

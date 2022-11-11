@@ -134,12 +134,12 @@ vec4 GetBaseColor()
 	if (material == 1)
 	{
 		// normalize(-vec3(0.2, 0.8, 0.0))
-		return vec4(fragColor.xyz * Diffuse(fragNormal, -viewDir), 1.0);
+		return vec4(fragColor.xyz * Diffuse(fragNormal, -viewDir)*fragAO, 1.0);
 	}
 	// AO
 	if (material == 2)
 	{
-		return vec4(fragAO.xyz * Diffuse(fragNormal, -viewDir), 1.0);
+		return vec4(fragAO.xyz, 1.0);
 	}
 }
 

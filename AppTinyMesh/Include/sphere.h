@@ -42,6 +42,9 @@ public:
 
     void Scale(double x) override;
 
+    bool Intersect(const Ray &ray, double &d, double &d1, double &d2) const override;
+
+
 private:
     double r2;
 };
